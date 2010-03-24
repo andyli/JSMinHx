@@ -1,0 +1,10 @@
+A haxe port of JSMin(http://www.crockford.com/javascript/jsmin.html).
+It is ported from JS version of JSMin.
+
+Use it by:
+haxelib run jsmin inputFile outputFile [level] [comment]
+
+Or use the JSMin class directly in your haXe program.
+The JSMin class minify the input once it is constructed. You can then get the result from its output property.
+Eg. 
+	var minifiedJS:String = new jsmin.JSMin(jsSource).output;
