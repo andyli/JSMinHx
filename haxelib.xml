@@ -1,7 +1,7 @@
-<project name="jsmin" url="" license="BSD">
+<project name="jsmin" url="http://github.com/andyli/JSMinHx" license="BSD">
     <user name="andyli"/>
     <tag v="js"/>
     <tag v="cross"/>
-    <description>A haxe port of JSMin(http://www.crockford.com/javascript/jsmin.html).</description>
-    <version name="1.0">Init release, complete and functonal.</version>
+    <description>A haxe port of JSMin(http://www.crockford.com/javascript/jsmin.html). Use it to minify JS files.</description>
+    <version name="1.1">Fixed using relative path in run.n. Added github repo url.</version>
 </project>
