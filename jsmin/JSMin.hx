@@ -117,21 +117,21 @@ class JSMin {
 				get();
 				if(peek() == '!') {
 					//important comment
-					var d = '/*!';
+					var d = new StringBuf();
+					d.add('/*!');
 					while (true) {
 						c = get();
 						switch (c) {
 						case '*':
 							if (peek() == '/') {
 								get();
-								return d+'*/';
+								d.add('*/');
+								return d.toString();
 							}
 						case _EOF:
 							throw 'Error: Unterminated comment.';
 						default:
-							//modern JS engines handle string concats much better than the 
-							//array+push+join hack.
-							d+=c;
+							d.add(c);
 						}
 					}					
 				} else {
@@ -163,17 +163,17 @@ class JSMin {
 	   action recognizes a regular expression if it is preceded by ( or , or =.
 	*/
 	private function action(d:Int):String {
-		var r:Array<String> = new Array<String>();
+		var r:StringBuf = new StringBuf();
 
 		if (d == 1) {
-			r.push(a);
+			r.add(a);
 		}
 
 		if (d < 3) {
 			a = b;
 			if (a == '\'' || a == '"') {
 				while (true) {
-					r.push(a);
+					r.add(a);
 					a = get();
 					if (a == b) {
 						break;
@@ -182,7 +182,7 @@ class JSMin {
 						//throw 'Error: unterminated string literal: ' + a;
 					}
 					if (a == '\\') {
-						r.push(a);
+						r.add(a);
 						a = get();
 					}
 				}
@@ -192,24 +192,24 @@ class JSMin {
 		b = next();
 
 		if (b == '/' && '(,=:[!&|'.indexOf(a) > -1) {
-			r.push(a);
-			r.push(b);
+			r.add(a);
+			r.add(b);
 			while (true) {
 				a = get();
 				if (a == '/') {
 					break;
 				} else if (a =='\\') {
-					r.push(a);
+					r.add(a);
 					a = get();
 				} else if (a <= '\n') {
 					throw 'Error: unterminated Regular Expression literal';
 				}
-				r.push(a);
+				r.add(a);
 			}
 			b = next();
 		}
 
-		return r.join('');
+		return r.toString();
 	}
 	
 	/* m -- Copy the input to the output, deleting the characters which are
@@ -220,33 +220,33 @@ class JSMin {
 	*/
 	private function m():String {
 
-		var r:Array<String> = new Array<String>();
+		var r:StringBuf = new StringBuf();
 		a = '\n';
 
-		r.push(action(3));
+		r.add(action(3));
 
 		while (a != _EOF) {
 			switch (a) {
 			case ' ':
 				if (isAlphanum(b)) {
-					r.push(action(1));
+					r.add(action(1));
 				} else {
-					r.push(action(2));
+					r.add(action(2));
 				}
 			case '\n':
 				switch (b) {
 				case '{','[','(','+','-':
-					r.push(action(1));
+					r.add(action(1));
 				case ' ':
-					r.push(action(3));
+					r.add(action(3));
 				default:
 					if (isAlphanum(b)) {
-						r.push(action(1));
+						r.add(action(1));
 					} else {
 						if (level == 1 && b != '\n') {
-							r.push(action(1));
+							r.add(action(1));
 						} else {
-							r.push(action(2));
+							r.add(action(2));
 						}
 					}
 				}
@@ -254,36 +254,36 @@ class JSMin {
 				switch (b) {
 				case ' ':
 					if (isAlphanum(a)) {
-						r.push(action(1));
+						r.add(action(1));
 					} else {
-						r.push(action(3));
+						r.add(action(3));
 					}
 				case '\n':
 					if (level == 1 && a != '\n') {
-						r.push(action(1));
+						r.add(action(1));
 					} else {
 						switch (a) {
 						case '}',']',')','+','-','"','\'':
 							if (level == 3) {
-								r.push(action(3));
+								r.add(action(3));
 							} else {
-								r.push(action(1));
+								r.add(action(1));
 							}
 						default:
 							if (isAlphanum(a)) {
-								r.push(action(1));
+								r.add(action(1));
 							} else {
-								r.push(action(3));
+								r.add(action(3));
 							}
 						}
 					}
 				default:
-					r.push(action(1));
+					r.add(action(1));
 				}
 			}
 		}
 
-		return r.join('');
+		return r.toString();
 	}
 
 	

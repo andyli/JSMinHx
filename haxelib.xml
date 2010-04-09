@@ -2,6 +2,6 @@
     <user name="andyli"/>
     <tag v="js"/>
     <tag v="cross"/>
-    <description>A haxe port of JSMin(http://www.crockford.com/javascript/jsmin.html). Use it to minify JS files.</description>
-    <version name="1.1">Fixed using relative path in run.n. Added github repo url.</version>
+    <description>A haXe port of JSMin(http://www.crockford.com/javascript/jsmin.html). Use it to minify JS files.</description>
+    <version name="1.2">Switched to use StringBuf to ensure best performance in all targets.</version>
 </project>
